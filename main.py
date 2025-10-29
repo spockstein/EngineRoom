@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import uvicorn
 from api.financial_insights import router as financial_insights_router
 from api.stock_quote import router as stock_quote_router
+from api.arxiv_recent_articles import router as arxiv_router  # Verify this import
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic_settings import BaseSettings
 from typing import List
@@ -23,7 +24,7 @@ settings = Settings()
 
 app = FastAPI(
     title="Financial Insights API",
-    description="API for retrieving financial insights for stocks",
+    description="API for retrieving financial insights for stocks and arXiv articles",
     version="1.0.0"
 )
 
@@ -36,9 +37,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# Include routers - make sure arxiv_router is included
 app.include_router(financial_insights_router)
 app.include_router(stock_quote_router)
+app.include_router(arxiv_router)  # Verify this line is present and not commented out
 
 @app.get("/")
 async def root():
@@ -51,4 +53,6 @@ if __name__ == "__main__":
         port=settings.APP_PORT, 
         reload=True
     )
+
+
 
